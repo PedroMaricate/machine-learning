@@ -1,7 +1,7 @@
-site_name: Template de Entrega
-site_author: Sandmann, H.
-site_url: https://hsandmann.github.io/documentation.template
-repo_url: https://github.com/hsandmann/documentation.template
+site_name: Machine Learning
+site_author: Pedro Maricate
+site_url: http://127.0.0.1:8000/documentation.template/arvore-decisao/main/#preprocessing
+repo_url: https://github.com/PedroMaricate/machine-learning
 repo_name: github/documentation.template
 
 theme:
