@@ -1,8 +1,13 @@
 ## Exploração dos Dados
 
-Para o projeto foi utilizado o dataset https://www.kaggle.com/datasets/taweilo/mba-admission-dataset
+Para o projeto foi utilizado o dataset no [Kagle](https://www.kaggle.com/datasets/taweilo/mba-admission-dataset)
 
 O conjunto de dados utilizado contém informações de 6.194 candidatos a programas de MBA, incluindo variáveis acadêmicas, demográficas e profissionais, bem como o resultado da admissão. Entre as principais colunas, destacam-se: gênero, nacionalidade, GPA, área de formação, etnia, pontuação no GMAT, experiência de trabalho, setor de atuação e resultado da admissão.
+
+
+```python exec="on" html="1"
+--8<-- "docs/arvore-decisao/colunas/gender.py"
+```
 
 ## Códigos
 
