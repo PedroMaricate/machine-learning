@@ -48,10 +48,16 @@ accuracy = classifier.score(x_test, y_test)
 print(f"Accuracy: {accuracy:.2f}")
 tree.plot_tree(classifier)
 
-# Mostrar as regras da árvore no console
-from sklearn.tree import export_text
-rules = export_text(classifier, feature_names=list(x.columns))
-print(rules)
+feature_importance = pd.DataFrame({
+    'Feature': classifier.feature_names_in_,
+    'Importância': classifier.feature_importances_
+})
+print("<br>Importância das Features:")
+print(feature_importance.sort_values(by='Importância', ascending=False).to_html())
+
+plt.figure(figsize=(20, 10))
+tree.plot_tree(classifier, max_depth=5, fontsize=10)
+
 
 # Para imprimir na página HTML
 buffer = StringIO()
