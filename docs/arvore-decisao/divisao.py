@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
-df = pd.read_csv("C:/Users/pedro.maricate/Downloads/baseMBA/MBA.csv")
+df = pd.read_csv("./src/MBA.csv")
 
 label_encoder = LabelEncoder()
 

@@ -27,7 +27,7 @@ def preprocess(df):
     return df[features]
      
 # Load the dataset
-df = pd.read_csv('C:/Users/pedro.maricate/Downloads/baseMBA/MBA.csv')
+df = pd.read_csv('./src/MBA.csv')
 
 # Preprocessing
 df = preprocess(df)

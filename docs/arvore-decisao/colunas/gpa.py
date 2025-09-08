@@ -4,7 +4,7 @@ import matplotlib.lines as mlines
 import pandas as pd
 from io import StringIO
 
-df = pd.read_csv("C:/Users/pedro.maricate/Downloads/baseMBA/MBA.csv")
+df = pd.read_csv("./src/MBA.csv")
 
 gpa = (
     df["gpa"]

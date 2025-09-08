@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from io import StringIO
 from sklearn.preprocessing import LabelEncoder
 
-DATA_PATH = "C:/Users/pedro.maricate/Downloads/baseMBA/MBA.csv"
+DATA_PATH = "./src/MBA.csv"
 
 label_encoder = LabelEncoder()
 
