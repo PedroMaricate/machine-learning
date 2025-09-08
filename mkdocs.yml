@@ -1,6 +1,6 @@
 site_name: Machine Learning
 site_author: Pedro Maricate
-site_url: http://127.0.0.1:8000/documentation.template/arvore-decisao/main/#preprocessing
+site_url: https://pedromaricate.github.io/machine-learning
 repo_url: https://github.com/PedroMaricate/machine-learning
 repo_name: github/documentation.template
 
@@ -132,11 +132,11 @@ extra_javascript:
   - https://fastly.jsdelivr.net/npm/echarts/dist/echarts.min.js
 
 nav:
-  - Home: index.md
+  #- Home: index.md
   - Árvore de Decisão: ./arvore-decisao/main.md
-  - Roteiros:
-    - Roteiro 1: ./roteiro1/main.md
-    - Roteiro 2: ./roteiro2/main.md
-    - Roteiro 3: ./roteiro3/main.md
-    - Roteiro 4: ./roteiro4/main.md
-  - Projeto: ./projeto/main.md
+  #- Roteiros:
+    #- Roteiro 1: ./roteiro1/main.md
+    #- Roteiro 2: ./roteiro2/main.md
+    #- Roteiro 3: ./roteiro3/main.md
+    #- Roteiro 4: ./roteiro4/main.md
+  #- Projeto: ./projeto/main.md
