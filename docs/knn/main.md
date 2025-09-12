@@ -1,14 +1,8 @@
 ## Introdução
-O modelo desenvolvido tem como objetivo prever o resultado de admissões em programas de MBA a partir de um conjunto de informações sobre os candidatos. Para isso, foi escolhida a técnica de árvores de decisão, que se mostra adequada por sua interpretabilidade e pela capacidade de lidar com variáveis de diferentes naturezas. Essa abordagem permite não apenas realizar previsões sobre o status de admissão, mas também compreender quais fatores exercem maior influência no processo seletivo. Dessa forma, o modelo não se limita a um exercício de classificação, mas também funciona como ferramenta de análise, apontando as características mais relevantes no perfil de um candidato admitido, em lista de espera ou recusado.
+O algoritmo K-Nearest Neighbors (KNN) foi utilizado como alternativa para prever o status de admissão dos candidatos ao MBA. Esse método classifica cada candidato com base nos perfis mais semelhantes do conjunto de treino, considerando atributos como GPA, GMAT e experiência profissional. Por sua simplicidade e flexibilidade, o KNN não depende de relações lineares e oferece uma visão baseada em proximidade entre os candidatos, funcionando como complemento às análises realizadas com a árvore de decisão.
 
 ## Base de dados
 A [base](https://www.kaggle.com/datasets/taweilo/mba-admission-dataset) utilizada é composta por dados sintéticos criados a partir das estatísticas da turma de 2025 do MBA de Wharton. Ela reúne informações demográficas, acadêmicas e profissionais de candidatos, como gênero, nacionalidade, área de formação, desempenho no GPA e no GMAT, além de experiência de trabalho e setor de atuação. Esses atributos foram relacionados ao status final da candidatura, categorizado como admitido, em lista de espera ou negado. Por se tratar de um conjunto de dados diversificado, é possível observar tanto os aspectos objetivos ligados ao desempenho acadêmico e profissional quanto elementos contextuais que podem influenciar o resultado do processo seletivo. Essa combinação torna o dataset especialmente relevante para análises exploratórias e para o desenvolvimento de modelos preditivos que buscam compreender os critérios implícitos de seleção em admissões de MBA.
-
-
-
-## Exploração dos Dados
-
-A seguir foi realizada uma análise exploratória da base de dados, com o objetivo de compreender o significado e a composição de cada coluna. Essa etapa busca identificar possíveis problemas, como valores ausentes ou distribuições desbalanceadas, que podem influenciar diretamente a qualidade do modelo. As visualizações e estatísticas descritivas permitem observar padrões, tendências e discrepâncias entre os candidatos, fornecendo subsídios importantes para orientar as decisões de pré-processamento e a construção da árvore de decisão.
 
 === "gender"
     A variável gênero apresenta uma diferença significativa na quantidade de aplicações. Observa-se uma predominância de candidatos do sexo masculino em comparação às candidatas do sexo feminino, o que indica uma distribuição desigual nesse aspecto. Essa discrepância pode refletir tendências do mercado de MBA ou características específicas da base gerada. Além disso, é um fator importante a ser considerado no modelo, já que possíveis vieses de gênero podem influenciar tanto a análise quanto as previsões de admissão.
@@ -88,43 +82,43 @@ As principais etapas conduzidas incluem:
     ```
 
 ## Divisão dos Dados
-Após o pré-processamento, os dados foram divididos em dois subconjuntos: 80% para treinamento e 20% para teste. Essa proporção é amplamente utilizada em problemas de classificação, pois fornece uma quantidade suficiente de exemplos para o aprendizado do modelo, ao mesmo tempo em que reserva uma amostra representativa para a avaliação final.
+Após o pré-processamento, os dados foram divididos em dois subconjuntos: 80% para treinamento e 20% para teste. Essa proporção é adequada em problemas de classificação, pois garante exemplos suficientes para o aprendizado do modelo, ao mesmo tempo em que reserva uma amostra representativa para a avaliação final.
 
-A divisão foi realizada utilizando a função train_test_split da biblioteca scikit-learn, com a opção de estratificação pela variável alvo (admission), de modo a preservar a proporção original entre as classes (Admit, Waitlist e Deny) em ambos os conjuntos. Isso garante que o modelo não seja favorecido ou prejudicado por distribuições desbalanceadas.
+A divisão foi realizada utilizando a função train_test_split da biblioteca scikit-learn, com estratificação pela variável alvo (admission), de modo a preservar a proporção original entre as classes (Admit, Waitlist e Deny) em ambos os conjuntos. Isso assegura que o modelo não seja influenciado por distribuições desbalanceadas.
 
-Dessa forma, o conjunto de treinamento é usado para ajustar os parâmetros da árvore de decisão, enquanto o conjunto de teste serve como base imparcial para medir a acurácia e capacidade de generalização do modelo.
+Dessa forma, o conjunto de treinamento é utilizado para armazenar os exemplos que servirão de referência ao algoritmo KNN, enquanto o conjunto de teste é aplicado para medir a acurácia e a capacidade de generalização do modelo na classificação de novos candidatos.
 
 ```python exec="0"
 --8<-- "docs/arvore-decisao/divisao.py"
 ```
-
 ## Treinamento do Modelo
 
 === "Modelo"
     ```python exec="on" html="1"    
-    --8<-- "docs/arvore-decisao/decision-tree.py"
+    --8<-- "docs/knn/modelo_knn.py"
     ```
 === "Código"
     ```python exec="0"    
-    --8<-- "docs/arvore-decisao/decision-tree.py"
+    --8<-- "docs/knn/modelo_knn.py"
     ```
 
-## Avaliação do modelo
+## Usando Scikit-Learn
 
-O modelo de árvore de decisão alcançou uma acurácia de 78% na base de teste, demonstrando um desempenho satisfatório na tarefa de prever o status de admissão dos candidatos. Esse resultado indica que, em média, cerca de oito em cada dez previsões realizadas pelo modelo estão corretas, o que sugere boa capacidade de generalização.
+=== "Resultado"
+    ```python exec="on" html="1"    
+    --8<-- "docs/knn/decision_knn.py"
+    ```
+=== "Código"
+    ```python exec="0"    
+    --8<-- "docs/knn/decision_knn.py"
+    ```
 
-A análise da importância das variáveis reforça a relevância dos indicadores acadêmicos, em especial o GPA (0.31) e o GMAT (0.30), que juntos representam mais de 60% da capacidade explicativa do modelo. Em seguida, fatores ligados à trajetória profissional, como setor de atuação (work_industry) e anos de experiência (work_exp), também apresentam peso significativo, ainda que menor, o que evidencia que o desempenho acadêmico continua sendo o principal critério de admissão.
+## Avaliação do Modelo
+O modelo KNN, configurado com k = 5, apresentou uma acurácia de 84% no conjunto de teste, evidenciando bom desempenho na tarefa de prever o status de admissão dos candidatos. Isso significa que, em média, oito a cada dez previsões realizadas foram corretas. A visualização da fronteira de decisão confirma esse resultado: a maior parte do espaço é dominada pela classe Deny, refletindo a predominância dessa categoria na base. Ainda assim, o modelo conseguiu identificar regiões específicas associadas às classes Waitlist e Admit, ainda que com certa sobreposição, o que explica eventuais erros de classificação.
 
-As demais variáveis, como major, raça, nacionalidade e gênero, apresentam importâncias mais baixas, sugerindo que exercem influência menos direta sobre a decisão de admissão. No entanto, sua inclusão no modelo contribui para capturar nuances adicionais que podem afetar o resultado em casos específicos.
+O desempenho consistente do KNN reforça sua capacidade de capturar padrões de similaridade entre os candidatos, especialmente quando atributos como GPA e GMAT se combinam com variáveis de experiência profissional. Entretanto, a irregularidade da fronteira de decisão também evidencia uma limitação do método, que pode se tornar sensível a ruídos e depender fortemente da distribuição dos dados no espaço de features.
 
-De forma geral, os resultados confirmam que a combinação de desempenho acadêmico e experiência profissional são os fatores mais determinantes para o processo de admissão, em consonância com práticas comuns em programas de MBA de alto nível.
+## Conclusão 
+O uso do algoritmo KNN mostrou-se eficaz para a classificação dos candidatos ao MBA, atingindo bons níveis de acurácia e confirmando a relevância de atributos acadêmicos e profissionais na determinação do status de admissão. O modelo se destacou por sua simplicidade e pela interpretação intuitiva baseada em proximidade entre perfis semelhantes.
 
-## Conclusão
-A partir da análise da base de dados de admissões em MBA, foi possível compreender o perfil dos candidatos e identificar padrões relevantes que influenciam os resultados de aceitação, lista de espera ou recusa. A exploração inicial revelou um conjunto diversificado de informações, abrangendo aspectos acadêmicos, profissionais e demográficos, permitindo visualizar tanto tendências predominantes — como a maior representatividade de determinados grupos — quanto a presença de outliers em variáveis como GPA e GMAT.
-
-O pré-processamento dos dados foi fundamental para garantir consistência e qualidade, contemplando a padronização de variáveis categóricas, a imputação de valores ausentes e a definição clara entre variáveis explicativas e alvo. Essa preparação assegurou que o modelo pudesse ser treinado de forma adequada, sem vieses estruturais oriundos da própria base.
-
-Na etapa de modelagem, a divisão entre treino e teste possibilitou avaliar a capacidade de generalização do algoritmo. O modelo de árvore de decisão alcançou uma acurácia de 78%, demonstrando desempenho sólido ao prever o status de admissão. A análise das importâncias das variáveis evidenciou a centralidade dos critérios acadêmicos — com destaque para GPA e GMAT — complementados por fatores ligados à experiência profissional, como anos de atuação e setor de trabalho. Aspectos demográficos, como gênero, raça e nacionalidade, apresentaram impacto secundário, contribuindo de forma menos expressiva para a classificação final.
-
-De maneira geral, os resultados confirmam que o processo de admissão em programas de MBA é fortemente guiado pela combinação de desempenho acadêmico e experiência profissional, refletindo a prática de selecionar candidatos que conciliem excelência acadêmica com vivência de mercado. O estudo mostra, portanto, que modelos de aprendizado de máquina podem não apenas auxiliar na previsão de admissões, mas também oferecer insights relevantes sobre os fatores que mais pesam em processos seletivos competitivos.
-
+Apesar disso, a análise gráfica revelou que a separação entre classes não é totalmente nítida, em especial entre os grupos Admit e Waitlist, o que sugere a necessidade de ajustes no valor de k ou a utilização de técnicas complementares para melhorar a robustez das previsões. De maneira geral, os resultados demonstram que o KNN pode servir como uma ferramenta útil no apoio à análise de admissões, oferecendo uma abordagem alternativa e comparativa em relação à árvore de decisão, já aplicada anteriormente.
