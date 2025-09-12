@@ -9,7 +9,7 @@ from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 
-df = pd.read_csv("C:/Users/pedro.maricate/Downloads/baseMBA/MBA.csv")
+df = pd.read_csv("./src/MBA.csv")
 
 df["admission"] = df["admission"].fillna("Deny")
 df["race"] = df["race"].fillna("Unknown")
