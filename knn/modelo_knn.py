@@ -1,0 +1,64 @@
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import StandardScaler
+
+DATA_PATH = "./src/MBA.csv"
+df = pd.read_csv(DATA_PATH)
+
+df["admission"] = df["admission"].fillna("Deny")
+df["race"] = df["race"].fillna("Unknown")
+
+adm_map = {"Deny": 0, "Waitlist": 1, "Admit": 2}
+y = df["admission"].map(adm_map).astype(int)
+
+num_cols = ["gpa", "gmat", "work_exp"]
+cat_cols = ["gender", "international", "major", "race", "work_industry"]
+
+for c in num_cols:
+    df[c] = pd.to_numeric(df[c], errors="coerce")
+    df[c] = df[c].fillna(df[c].median())
+
+X_cat = pd.get_dummies(df[cat_cols].astype(str).apply(lambda s: s.str.strip()),
+                       drop_first=False, dtype=int)
+X_num = df[num_cols].copy()
+
+scaler = StandardScaler()
+X_num[num_cols] = scaler.fit_transform(X_num[num_cols])
+
+X = pd.concat([X_num, X_cat], axis=1).values
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.20, random_state=42, stratify=y
+)
+
+class KNNClassifier:
+    def __init__(self, k=5):
+        self.k = k
+
+    def fit(self, X, y):
+        self.X_train = X
+        self.y_train = np.array(y)  # Garantir que y_train seja um numpy array
+
+    def predict(self, X):
+        return np.array([self._predict(x) for x in X])
+
+    def _predict(self, x):
+        # Distâncias Euclidianas
+        distances = np.sqrt(((self.X_train - x) ** 2).sum(axis=1))
+        # Índices dos k vizinhos mais próximos
+        k_idx = np.argsort(distances)[:self.k]
+        # Classes dos vizinhos
+        k_labels = self.y_train[k_idx]
+        # Classe mais frequente
+        vals, counts = np.unique(k_labels, return_counts=True)
+        return vals[np.argmax(counts)]
+
+# Treinar e avaliar
+knn = KNNClassifier(k=5)  #pode ajustar k (3, 5, 7...)
+knn.fit(X_train, y_train)
+y_pred = knn.predict(X_test)
+
+acc = accuracy_score(y_test, y_pred)
+print(f"Acurácia (KNN k={knn.k}): {acc:.2f}")
