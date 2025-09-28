@@ -39,24 +39,19 @@ class KNNClassifier:
 
     def fit(self, X, y):
         self.X_train = X
-        self.y_train = np.array(y)  # Garantir que y_train seja um numpy array
-
+        self.y_train = np.array(y) 
+        
     def predict(self, X):
         return np.array([self._predict(x) for x in X])
 
     def _predict(self, x):
-        # Distâncias Euclidianas
         distances = np.sqrt(((self.X_train - x) ** 2).sum(axis=1))
-        # Índices dos k vizinhos mais próximos
         k_idx = np.argsort(distances)[:self.k]
-        # Classes dos vizinhos
         k_labels = self.y_train[k_idx]
-        # Classe mais frequente
         vals, counts = np.unique(k_labels, return_counts=True)
         return vals[np.argmax(counts)]
 
-# Treinar e avaliar
-knn = KNNClassifier(k=5)  #pode ajustar k (3, 5, 7...)
+knn = KNNClassifier(k=5) 
 knn.fit(X_train, y_train)
 y_pred = knn.predict(X_test)
 

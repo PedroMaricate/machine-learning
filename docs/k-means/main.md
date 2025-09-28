@@ -58,3 +58,57 @@ A [base](https://www.kaggle.com/datasets/taweilo/mba-admission-dataset) utilizad
     ```python exec="on" html="1"
     --8<-- "docs/arvore-decisao/colunas/work_industry.py"
     ```
+
+## Pré-Processamento 
+Com base na análise exploratória realizada, foram definidos e aplicados procedimentos de pré-processamento a fim de adequar os dados para a etapa de modelagem.
+As principais etapas conduzidas incluem:
+
+- **Tratamento de valores ausentes**:na variável admission, valores nulos foram interpretados como recusa e substituídos por Deny. Já na variável race, os valores ausentes foram preenchidos como Unknown, garantindo a consistência da base.
+- **Codificação de variáveis categóricas**: colunas como gender, international, major, race, work_industry e admission foram convertidas em variáveis numéricas por meio do método LabelEncoder, possibilitando sua utilização pelo modelo de árvore de decisão.
+- **Imputação em variáveis numéricas**: atributos como gpa, gmat e work_exp tiveram seus valores ausentes substituídos pela mediana, minimizando a influência de outliers e preservando a distribuição original dos dados.
+- **Seleção de variáveis**: foram mantidas no conjunto de treino apenas as colunas relevantes para a análise preditiva, enquanto identificadores como application_id foram descartados por não possuírem valor analítico.
+- **Separação entre features e target**: as variáveis explicativas (X) foram definidas a partir das características acadêmicas, demográficas e profissionais dos candidatos, enquanto a variável alvo (y) corresponde ao status de admission.
+- **Divisão em treino e teste**: o conjunto de dados foi dividido em duas partes, com 80% para treino e 20% para teste, garantindo estratificação da variável alvo para preservar a proporção entre as classes.
+
+
+=== "Base Original"
+    ```python exec="1"
+    --8<-- "docs/arvore-decisao/base.py"
+    ```
+
+=== "Base Preparada"
+    ```python exec="1"
+    --8<-- "docs/arvore-decisao/base_preparada.py"
+    ```
+
+## Divisão dos Dados
+Diferentemente dos modelos supervisionados, em que é necessário separar os dados em conjuntos de treino e teste, o algoritmo K-Means segue uma abordagem não supervisionada. Isso significa que ele não utiliza diretamente a variável-alvo admission durante o processo de agrupamento, mas sim apenas as variáveis explicativas (gpa, gmat, work_exp, gender, international, major, race, work_industry).
+
+Nesse contexto, todos os dados disponíveis foram utilizados para a aplicação do K-Means, de forma a identificar agrupamentos naturais dentro da base. A variável admission foi mantida apenas como referência, sendo utilizada posteriormente para comparar os clusters formados pelo modelo com as categorias reais de decisão (Admit, Waitlist e Deny). Essa estratégia permite avaliar se os grupos encontrados refletem, ao menos parcialmente, os padrões de admissão presentes no conjunto de candidatos.
+
+```python exec="0"
+--8<-- "docs/k-means/divisao_k-means.py"
+```
+
+## Treinamento do Modelo
+
+=== "Modelo"
+    ```python exec="on" html="1"    
+    --8<-- "docs/k-means/treinamento_k-means.py"
+    ```
+=== "Código"
+    ```python exec="0"    
+    --8<-- "docs/k-means/treinamento_k-means.py"
+    ```
+
+## Avaliação do Modelo
+O modelo K-Means foi avaliado a partir da visualização gráfica dos clusters gerados. Para representar os dados multidimensionais em duas dimensões, foi aplicada a técnica de PCA (Análise de Componentes Principais), que permite projetar as informações em um espaço 2D mantendo a maior variabilidade possível.
+
+No gráfico, cada ponto representa um candidato ao MBA e está colorido de acordo com o cluster atribuído pelo algoritmo. Já as estrelas vermelhas indicam os centróides, ou seja, os pontos médios que definem cada grupo. A distribuição dos clusters demonstra que o modelo conseguiu separar padrões distintos dentro da base, ainda que existam áreas de sobreposição entre os grupos.
+
+É importante ressaltar que, como se trata de uma técnica não supervisionada, o K-Means não utilizou os rótulos reais de admissão durante o treinamento. Dessa forma, a análise do gráfico permite observar o quão bem os clusters se organizaram em relação às variáveis explicativas. Apesar da presença de regiões com interseção entre cores, os resultados mostram que o algoritmo conseguiu identificar agrupamentos consistentes, refletindo diferenças entre perfis de candidatos.
+
+Assim, o gráfico fornece uma primeira evidência visual de que o K-Means é capaz de estruturar a base em grupos coerentes, servindo como ponto de partida para avaliações quantitativas mais detalhadas por meio de métricas como silhouette score, inertia e adjusted rand index.
+
+## Conclusão
+A aplicação do algoritmo K-Means na base MBA permitiu identificar padrões e agrupar candidatos de acordo com suas características acadêmicas e profissionais. Apesar da sobreposição entre alguns clusters, a análise mostrou que o modelo conseguiu segmentar o conjunto de dados em grupos distintos, oferecendo uma visão exploratória útil sobre os perfis existentes. Dessa forma, o K-Means se mostrou uma ferramenta complementar para entender melhor a estrutura dos dados e apoiar futuras análises preditivas.
