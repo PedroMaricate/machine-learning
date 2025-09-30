@@ -93,16 +93,25 @@ Com isso, o conjunto de treinamento é destinado ao ajuste dos algoritmos testad
 ```
 
 ## Treinamento do Modelo
-=== "Código"
-    ```python exec="0"    
+=== "Resultado"
+    ```python exec="on" html="1"    
     --8<-- "docs/metricas-avaliacao/treinamento-metricas.py"
     ```
 
+
 ## Avaliação do Modelo
-== Avaliação KNN
+===  "Avaliação KNN"
 
     O modelo KNN apresentou acurácia de aproximadamente 84%, o que indica um bom desempenho geral na classificação dos candidatos. Pela matriz de confusão, nota-se que o modelo classifica corretamente a maior parte da classe Deny (0), mas apresenta dificuldades em distinguir as classes Waitlist (1) e Admit (2), refletido nos valores baixos de precision e recall para essas categorias. Isso é esperado, já que as classes estão desbalanceadas. O weighted F1-score de 0.81 reforça que, embora haja desequilíbrio, o modelo consegue manter uma performance satisfatória no conjunto de teste.
 
-== Avaliação K-Means
+===  "Avaliação K-Means"
 
     No caso do K-Means, o desempenho foi mais limitado. O Silhouette Score (0,13) mostra que os clusters formados não são bem separados, indicando sobreposição entre os grupos. Além disso, o Adjusted Rand Index (0,04) confirma que os clusters obtidos apresentam baixa concordância com as classes reais de admissão (Deny, Waitlist e Admit). A matriz de confusão evidencia que os clusters não correspondem claramente às categorias originais, reforçando que o K-Means não captura adequadamente os padrões da base para fins de classificação supervisionada.
+
+
+## Conclusão
+A comparação entre os modelos evidencia diferenças significativas em sua capacidade de representar os dados. O KNN apresentou desempenho consistente, com acurácia de aproximadamente 84% e métricas robustas para a classe majoritária, mostrando-se eficaz em capturar padrões de similaridade entre os candidatos ao MBA. Apesar das limitações em distinguir as classes minoritárias, o modelo ainda se destaca como uma abordagem mais confiável para problemas de classificação supervisionada.
+
+Por outro lado, o K-Means, por ser um algoritmo não supervisionado, teve maior dificuldade em alinhar seus clusters às categorias reais de admissão. O Silhouette Score baixo (0,13) e o Adjusted Rand Index próximo de zero confirmam a ausência de separação clara entre os grupos, reforçando que essa técnica não se mostrou adequada para reproduzir os padrões de classificação exigidos pelo problema.
+
+Dessa forma, conclui-se que o KNN é o modelo mais apropriado para esta base, enquanto o K-Means pode ser útil apenas em análises exploratórias, mas não como ferramenta principal de previsão.
