@@ -77,3 +77,29 @@ buffer = StringIO()
 plt.savefig(buffer, format="svg", transparent=True)
 print(buffer.getvalue())
 # --- Fim do código ---
+
+labels = kmeans.fit_predict(X)
+# (se usar treino/teste, troque X por X_train / y por y_train)
+
+# --- salvar artefatos do K-Means ---
+import os, joblib
+
+ART = "docs/k-means/artifacts"
+os.makedirs(ART, exist_ok=True)
+
+joblib.dump(
+    {
+        "kmeans": kmeans,
+        "X": X,
+        "y": y,                     # rótulo "admission" codificado (0/1/2)
+        "labels": labels,
+        "silhouette": sil_score,
+        "inertia": inertia,
+        "pca_2d": X_2d,
+        "centers_2d": centers_2d,
+        "explained": explained,
+    },
+    f"{ART}/kmeans_artifacts.pkl"
+)
+
+print(f"[SALVO] Artefatos K-Means em {ART}/kmeans_artifacts.pkl")

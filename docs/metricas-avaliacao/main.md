@@ -58,60 +58,34 @@ A [base](https://www.kaggle.com/datasets/taweilo/mba-admission-dataset) utilizad
     ```python exec="on" html="1"
     --8<-- "docs/arvore-decisao/colunas/work_industry.py"
     ```
-
-## Pré-Processamento 
-Com base na análise exploratória realizada, foram definidos e aplicados procedimentos de pré-processamento a fim de adequar os dados para a etapa de modelagem.
-As principais etapas conduzidas incluem:
-
-- **Tratamento de valores ausentes**:na variável admission, valores nulos foram interpretados como recusa e substituídos por Deny. Já na variável race, os valores ausentes foram preenchidos como Unknown, garantindo a consistência da base.
-- **Codificação de variáveis categóricas**: colunas como gender, international, major, race, work_industry e admission foram convertidas em variáveis numéricas por meio do método LabelEncoder, possibilitando sua utilização pelo modelo de árvore de decisão.
-- **Imputação em variáveis numéricas**: atributos como gpa, gmat e work_exp tiveram seus valores ausentes substituídos pela mediana, minimizando a influência de outliers e preservando a distribuição original dos dados.
-- **Seleção de variáveis**: foram mantidas no conjunto de treino apenas as colunas relevantes para a análise preditiva, enquanto identificadores como application_id foram descartados por não possuírem valor analítico.
-- **Separação entre features e target**: as variáveis explicativas (X) foram definidas a partir das características acadêmicas, demográficas e profissionais dos candidatos, enquanto a variável alvo (y) corresponde ao status de admission.
-- **Divisão em treino e teste**: o conjunto de dados foi dividido em duas partes, com 80% para treino e 20% para teste, garantindo estratificação da variável alvo para preservar a proporção entre as classes.
-
-
-=== "Base Original"
-    ```python exec="1"
-    --8<-- "docs/arvore-decisao/base.py"
-    ```
-
-=== "Base Preparada"
-    ```python exec="1"
-    --8<-- "docs/arvore-decisao/base_preparada.py"
-    ```
-
-## Divisão dos Dados
-Após o pré-processamento, os dados foram divididos em dois subconjuntos: 80% para treinamento e 20% para teste. Essa divisão é amplamente utilizada em problemas de classificação, pois garante exemplos suficientes para o ajuste dos algoritmos e, ao mesmo tempo, reserva uma amostra representativa para a etapa de avaliação.
-
-A separação foi realizada por meio da função train_test_split da biblioteca scikit-learn, utilizando a opção de estratificação pela variável alvo (admission). Esse procedimento assegura que a proporção original entre as classes (Admit, Waitlist e Deny) seja mantida em ambos os subconjuntos, evitando que o modelo seja influenciado por distribuições desbalanceadas.
-
-Com isso, o conjunto de treinamento é destinado ao ajuste dos algoritmos testados, enquanto o conjunto de teste serve como base imparcial para a aplicação das métricas de desempenho, como acurácia, precisão, recall, F1-Score e matriz de confusão, que permitem avaliar a qualidade das previsões obtidas.
-
-```python exec="0"
---8<-- "docs/arvore-decisao/divisao.py"
-```
-
-## Treinamento do Modelo
-=== "Resultado"
+## Matriz de Confusão
+=== "KNN"
     ```python exec="on" html="1"    
-    --8<-- "docs/metricas-avaliacao/treinamento-metricas.py"
+    --8<-- "docs/knn/matriz_knn.py"
     ```
+    
+    Esse gráfico apresenta a matriz de confusão do modelo KNN, permitindo visualizar o desempenho do classificador em cada classe da variável admission. Observa-se que a maior parte dos acertos está concentrada na classe 0 (Deny), onde o modelo classificou corretamente 999 candidatos. Já para as classes 1 (Waitlist) e 2 (Admit), o número de acertos foi consideravelmente menor, com alguns exemplos sendo confundidos principalmente como classe 0. Isso evidencia que o modelo tem boa performance em identificar candidatos não admitidos, mas encontra maior dificuldade em diferenciar os casos de lista de espera e admissão, o que pode estar relacionado ao desbalanceamento entre as classes.
 
+=== "K-Means"
+    ```python exec="on" html="1"
+    --8<-- "docs/k-means/matriz_k-means.py"
+    ```
+    
+    O gráfico mostra as matrizes de confusão do modelo K-Means, avaliando como os clusters formados se relacionam com as classes reais da variável admission.
 
-## Avaliação do Modelo
-===  "Avaliação KNN"
+    Na primeira matriz (classes vs clusters), observa-se que os candidatos foram distribuídos entre três grupos, mas sem uma correspondência clara com as classes verdadeiras (Admit, Waitlist e Deny). Isso é confirmado pelo Adjusted Rand Index (0.0417), que indica baixa similaridade entre clusters e rótulos reais.
 
-    O modelo KNN apresentou acurácia de aproximadamente 84%, o que indica um bom desempenho geral na classificação dos candidatos. Pela matriz de confusão, nota-se que o modelo classifica corretamente a maior parte da classe Deny (0), mas apresenta dificuldades em distinguir as classes Waitlist (1) e Admit (2), refletido nos valores baixos de precision e recall para essas categorias. Isso é esperado, já que as classes estão desbalanceadas. O weighted F1-score de 0.81 reforça que, embora haja desequilíbrio, o modelo consegue manter uma performance satisfatória no conjunto de teste.
+    Já na segunda matriz (clusters mapeados → classes), após o mapeamento dos clusters para as classes majoritárias, percebe-se que quase todos os exemplos foram atribuídos à classe 0 (Deny), ignorando as demais. Esse resultado demonstra a limitação do K-Means em capturar a estrutura real dos dados, com forte viés para a classe dominante, o que também é refletido pelo Silhouette Score baixo (0.1321).
 
-===  "Avaliação K-Means"
+    Em resumo, o K-Means não conseguiu separar adequadamente os grupos de candidatos, reforçando que algoritmos supervisionados (como o KNN) são mais eficazes para este problema.
 
-    No caso do K-Means, o desempenho foi mais limitado. O Silhouette Score (0,13) mostra que os clusters formados não são bem separados, indicando sobreposição entre os grupos. Além disso, o Adjusted Rand Index (0,04) confirma que os clusters obtidos apresentam baixa concordância com as classes reais de admissão (Deny, Waitlist e Admit). A matriz de confusão evidencia que os clusters não correspondem claramente às categorias originais, reforçando que o K-Means não captura adequadamente os padrões da base para fins de classificação supervisionada.
+## Métricas
 
+=== "KNN"
+    O modelo KNN apresentou uma acurácia de 83,8%, mostrando bom desempenho na previsão da classe Deny, com alta precisão (0,86) e recall (0,96). No entanto, teve dificuldades em identificar corretamente as classes Waitlist e Admit, com métricas baixas ou nulas. A matriz de confusão evidencia que a maioria dos erros ocorreu na confusão entre candidatos admitidos e negados, além da ausência de acertos na classe Waitlist.
 
-## Conclusão
-A comparação entre os modelos evidencia diferenças significativas em sua capacidade de representar os dados. O KNN apresentou desempenho consistente, com acurácia de aproximadamente 84% e métricas robustas para a classe majoritária, mostrando-se eficaz em capturar padrões de similaridade entre os candidatos ao MBA. Apesar das limitações em distinguir as classes minoritárias, o modelo ainda se destaca como uma abordagem mais confiável para problemas de classificação supervisionada.
+=== "K-Means"
+    O K-Means obteve resultados limitados, com Silhouette Score de 0,13 e Adjusted Rand Index de 0,04, indicando baixa qualidade de agrupamento em relação às classes reais. A matriz de confusão mostra que os clusters não conseguiram diferenciar adequadamente as categorias, concentrando a maioria dos exemplos na classe Deny. Esses resultados refletem as limitações do K-Means em problemas supervisionados de classificação.
 
-Por outro lado, o K-Means, por ser um algoritmo não supervisionado, teve maior dificuldade em alinhar seus clusters às categorias reais de admissão. O Silhouette Score baixo (0,13) e o Adjusted Rand Index próximo de zero confirmam a ausência de separação clara entre os grupos, reforçando que essa técnica não se mostrou adequada para reproduzir os padrões de classificação exigidos pelo problema.
-
-Dessa forma, conclui-se que o KNN é o modelo mais apropriado para esta base, enquanto o K-Means pode ser útil apenas em análises exploratórias, mas não como ferramenta principal de previsão.
+## Comparação dos Resultados
+Na comparação entre os modelos, o KNN apresentou desempenho superior ao K-Means. O KNN alcançou acurácia de 83,8%, sendo eficiente principalmente na identificação da classe Deny, ainda que com dificuldades em diferenciar Waitlist e Admit. Já o K-Means, com Silhouette Score de 0,13 e Adjusted Rand Index de 0,04, demonstrou baixa capacidade de agrupamento, evidenciando que o modelo não conseguiu refletir adequadamente as classes reais. Dessa forma, enquanto o KNN se mostrou mais adequado para a tarefa de classificação supervisionada, o K-Means teve desempenho limitado, reforçando seu uso mais apropriado em cenários de exploração ou agrupamento não supervisionado.

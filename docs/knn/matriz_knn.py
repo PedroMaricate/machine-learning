@@ -1,12 +1,15 @@
+# docs/metricas-avaliacao/matriz-confusao-knn.py
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 from sklearn.preprocessing import StandardScaler
+import seaborn as sns
+import matplotlib.pyplot as plt
+from io import StringIO
 
-DATA_PATH = "./src/MBA.csv"
-df = pd.read_csv(DATA_PATH)
-
+# === Carregar e preparar dados (mesmo pré-processamento) ===
+df = pd.read_csv("./src/MBA.csv")
 df["admission"] = df["admission"].fillna("Deny")
 df["race"] = df["race"].fillna("Unknown")
 
@@ -23,7 +26,6 @@ for c in num_cols:
 X_cat = pd.get_dummies(df[cat_cols].astype(str).apply(lambda s: s.str.strip()),
                        drop_first=False, dtype=int)
 X_num = df[num_cols].copy()
-
 scaler = StandardScaler()
 X_num[num_cols] = scaler.fit_transform(X_num[num_cols])
 
@@ -33,14 +35,15 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.20, random_state=42, stratify=y
 )
 
+# === Seu KNN “manual” ===
 class KNNClassifier:
     def __init__(self, k=5):
         self.k = k
 
     def fit(self, X, y):
         self.X_train = X
-        self.y_train = np.array(y) 
-        
+        self.y_train = np.array(y)
+
     def predict(self, X):
         return np.array([self._predict(x) for x in X])
 
@@ -51,36 +54,25 @@ class KNNClassifier:
         vals, counts = np.unique(k_labels, return_counts=True)
         return vals[np.argmax(counts)]
 
-knn = KNNClassifier(k=5) 
+knn = KNNClassifier(k=5)
 knn.fit(X_train, y_train)
 y_pred = knn.predict(X_test)
 
 acc = accuracy_score(y_test, y_pred)
 print(f"Acurácia (KNN k={knn.k}): {acc:.2f}")
+print("\nRelatório de Classificação (KNN):")
+print(classification_report(y_test, y_pred, digits=2))
 
-y_pred = knn.predict(X_test)
-acc = accuracy_score(y_test, y_pred)
-print(f"Acurácia (KNN k={knn.k}): {acc:.2f}")
+# === Matriz de confusão (SVG) ===
+cm = confusion_matrix(y_test, y_pred)
+plt.figure(figsize=(6, 4))
+sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
+plt.title("Matriz de Confusão - KNN (teste)")
+plt.xlabel("Classe Prevista")
+plt.ylabel("Classe Real")
+plt.tight_layout()
 
-
-# --- salvar artefatos do KNN (somente arrays) ---
-import os, joblib
-
-ART = "docs/knn/artifacts"
-os.makedirs(ART, exist_ok=True)
-
-# salve SOMENTE dados numéricos usados na avaliação
-joblib.dump(
-    {
-        "X_test": X_test,
-        "y_test": y_test,
-        "y_pred": y_pred,
-    },
-    f"{ART}/knn_eval.pkl", compress=3
-)
-
-# (opcional) se quiser salvar o modelo também, salve em separado.
-# Evite salvar o KNN customizado; use scikit-learn KNeighborsClassifier se precisar recarregar.
-# joblib.dump(knn, f"{ART}/knn_model.pkl", compress=3)
-
-print(f"[SALVO] Artefatos de avaliação do KNN em {ART}/knn_eval.pkl")
+buf = StringIO()
+plt.savefig(buf, format="svg", transparent=True)
+print(buf.getvalue())
+plt.close()
