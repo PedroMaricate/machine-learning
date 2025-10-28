@@ -37,4 +37,4 @@ for col in cat_cols:
     df[col] = le.fit_transform(df[col].astype(str))
     encoders[col] = le  
 
-print(df.sample(frac=0.01, random_state=42).to_markdown(index=False))
+print(df.sample(n=20, random_state=42).to_markdown(index=False))
