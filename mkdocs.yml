@@ -138,6 +138,9 @@ nav:
   - K-Means: ./k-means/main.md
   - Métricas de Avaliação: ./metricas-avaliacao/main.md
   - Random Forest: ./random-forest/main.md
+  - Page Rank: ./page-rank/main.md
+  - PySpark: ./pyspark/main.md
+
   #- Roteiros:
     #- Roteiro 1: ./roteiro1/main.md
     #- Roteiro 2: ./roteiro2/main.md
