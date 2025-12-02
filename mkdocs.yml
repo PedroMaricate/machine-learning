@@ -140,6 +140,7 @@ nav:
   - Random Forest: ./random-forest/main.md
   - Page Rank: ./page-rank/main.md
   - PySpark: ./pyspark/main.md
+  - SVM: ./svm/main.md
 
   #- Roteiros:
     #- Roteiro 1: ./roteiro1/main.md
