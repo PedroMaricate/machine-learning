@@ -10,57 +10,42 @@ A seguir foi realizada uma análise exploratória da base de dados, com o objeti
 === "gender"
     A variável gênero apresenta uma diferença significativa na quantidade de aplicações. Observa-se uma predominância de candidatos do sexo masculino em comparação às candidatas do sexo feminino, o que indica uma distribuição desigual nesse aspecto. Essa discrepância pode refletir tendências do mercado de MBA ou características específicas da base gerada. Além disso, é um fator importante a ser considerado no modelo, já que possíveis vieses de gênero podem influenciar tanto a análise quanto as previsões de admissão.
 
-    ```python exec="on" html="1"
-    --8<-- "docs/arvore-decisao/colunas/gender.py"
-    ```
+    ![Frequência de gênero por aplicações](../arvore-decisao/img/frequencia_genero_aplicacoes.png)
 
 === "international"
     A variável alunos internacionais mostra que a maior parte das aplicações é de candidatos domésticos (não internacionais), enquanto os estudantes internacionais representam uma parcela menor do total. Essa diferença pode indicar que os programas de MBA ainda têm maior procura local, embora o número de aplicações internacionais seja relevante para demonstrar a diversidade e a atratividade global da instituição. Essa característica pode influenciar o modelo de predição, visto que fatores como origem do aluno podem estar relacionados às taxas de aceitação.
 
-    ```python exec="on" html="1"
-    --8<-- "docs/arvore-decisao/colunas/international.py"
-    ```
+    ![Frequência de alunos internacionais por aplicações](../arvore-decisao/img/frequencia_alunos_internacionais.png)
 
 === "gpa"
     A variável GPA apresenta distribuição concentrada em torno de valores relativamente altos, entre 3.1 e 3.3, o que indica que a maior parte dos candidatos possui desempenho acadêmico consistente. A mediana situa-se pouco acima de 3.2, reforçando esse padrão. Observa-se ainda a presença de alguns valores atípicos, tanto abaixo de 2.8 quanto acima de 3.6, que representam candidatos com desempenho fora do perfil predominante. Esses outliers, embora pouco frequentes, podem influenciar a análise estatística e devem ser considerados no pré-processamento ou na interpretação dos resultados do modelo. De forma geral, a distribuição do GPA sugere que a base é composta majoritariamente por candidatos academicamente fortes, o que pode ser um dos critérios determinantes no processo de admissão.
 
-    ```python exec="on" html="1"
-    --8<-- "docs/arvore-decisao/colunas/gpa.py"
-    ```
+    ![Distribuição do GPA dos candidatos](../arvore-decisao/img/distribuicao_gpa_boxplot.png)
 
 === "major"
     A variável major, que representa a área de formação acadêmica dos candidatos, apresenta distribuição relativamente equilibrada entre as categorias, mas com destaque para Humanidades, que concentra o maior número de aplicações. As áreas de STEM e Business aparecem em proporções semelhantes, ambas com menor participação em relação a Humanidades. Essa diferença pode refletir o perfil da amostra, indicando maior procura de candidatos oriundos de cursos de Humanidades pelos programas de MBA. A análise dessa variável é relevante para verificar se determinadas formações acadêmicas têm maior representatividade ou desempenham papel diferenciado nos resultados de admissão.
 
-    ```python exec="on" html="1"
-    --8<-- "docs/arvore-decisao/colunas/major.py"
-    ```
+    ![Frequência de áreas de formação (majors)](../arvore-decisao/img/frequencia_majors.png)
 
 === "race"
     A variável raça apresenta distribuição diversificada entre os candidatos, com destaque para a categoria de pessoas que preferiram não se identificar, seguida pelo grupo White. Em seguida aparecem Asian, Black e Hispanic, enquanto a categoria Other concentra a menor quantidade de aplicações. Essa composição evidencia tanto a representatividade de diferentes origens raciais quanto a limitação do campo para candidatos internacionais. A análise dessa variável é importante para compreender a diversidade do conjunto de dados e avaliar se há possíveis diferenças de perfil que podem influenciar nos resultados de admissão.
 
-    ```python exec="on" html="1"
-    --8<-- "docs/arvore-decisao/colunas/race.py"
-    ```    
+    ![Frequência de raça por aplicações](../arvore-decisao/img/frequencia_raca.png)   
 
 === "gmat"
     A variável GMAT apresenta uma distribuição concentrada entre 600 e 700 pontos, faixa onde se encontra a maior parte dos candidatos. O pico de frequência ocorre próximo de 650 pontos, o que sugere que esse valor é representativo do desempenho médio dos aplicantes. Apesar dessa concentração, também há candidatos com pontuações mais baixas, em torno de 570, bem como outros que alcançam notas elevadas acima de 750, embora em menor quantidade. Essa distribuição indica que, em geral, os candidatos possuem desempenho sólido no exame, mas com variação suficiente para permitir que o modelo identifique padrões relacionados ao status de admissão.
 
-    ```python exec="on" html="1"
-    --8<-- "docs/arvore-decisao/colunas/gmat.py"
-    ``` 
+    ![Distribuição das pontuações de GMAT](../arvore-decisao/img/distribuicao_gmat.png)
+
 === "work_exp"
     A variável experiência profissional apresenta distribuição concentrada entre 4 e 6 anos de atuação no mercado, com destaque para os candidatos que possuem 5 anos de experiência, que representam a maior parte das aplicações. Os extremos da distribuição, com candidatos que possuem apenas 1 ou 2 anos de experiência e aqueles com mais de 7 anos, aparecem em menor número, configurando perfis menos frequentes na amostra. Esse padrão sugere que a base de dados está composta principalmente por profissionais em estágio intermediário de carreira, o que reflete o perfil típico de aplicantes a programas de MBA. Essa variável é particularmente relevante, pois pode influenciar diretamente nas chances de admissão, uma vez que a experiência prática é um critério valorizado nas seleções.
 
-    ```python exec="on" html="1"
-    --8<-- "docs/arvore-decisao/colunas/work_exp.py"
-    ``` 
+    ![Distribuição da experiência profissional](../arvore-decisao/img/distribuicao_experiencia_profissional.png)
 
 === "work_industry"
     A variável setor de experiência profissional revela que a maior parte dos candidatos possui trajetória em Consultoria, que se destaca amplamente em relação aos demais setores. Em seguida aparecem PE/VC (Private Equity e Venture Capital), Tecnologia e setores ligados ao serviço público ou organizações sem fins lucrativos, todos com participação significativa. Áreas tradicionais como Investment Banking e Financial Services também se mostram relevantes, mas em menor proporção. Já setores como Saúde, Bens de Consumo (CPG), Mídia/Entretenimento, Varejo, Imobiliário e Energia aparecem de forma mais restrita, representando nichos específicos da amostra. Essa distribuição indica que o MBA atrai predominantemente profissionais de consultoria e finanças, mas também apresenta diversidade ao incluir candidatos de áreas emergentes e de setores menos tradicionais.
 
-    ```python exec="on" html="1"
-    --8<-- "docs/arvore-decisao/colunas/work_industry.py"
-    ```
+    ![Frequência por setor de experiência profissional](../arvore-decisao/img/frequencia_setor_experiencia_profissional.png)
 
 ## Pré-Processamento 
 Com base na análise exploratória realizada, foram definidos e aplicados procedimentos de pré-processamento a fim de adequar os dados para a etapa de modelagem.
