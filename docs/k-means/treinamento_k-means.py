@@ -1,11 +1,12 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from io import StringIO
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-from sklearn.metrics import silhouette_score  # <-- métrica adicionada
+from sklearn.metrics import silhouette_score
+import os
+import joblib
 
 plt.figure(figsize=(12, 10))
 
@@ -35,63 +36,62 @@ X_num[num_cols] = scaler.fit_transform(X_num[num_cols])
 X = pd.concat([X_num, X_cat], axis=1).values
 
 # --- Treinamento do K-Means ---
-kmeans = KMeans(n_clusters=3, init='k-means++', max_iter=100,
-                random_state=42, n_init=10)
+kmeans = KMeans(
+    n_clusters=3,
+    init="k-means++",
+    max_iter=100,
+    random_state=42,
+    n_init=10
+)
 labels = kmeans.fit_predict(X)
 
-# --- Métricas de avaliação (sem rótulos verdadeiros) ---
-# 1) Silhouette Score (quanto maior, melhor; faixa [-1, 1])
+# --- Métricas ---
 sil_score = silhouette_score(X, labels)
-
-# 2) Inertia (WCSS) - soma das distâncias quadráticas aos centróides (quanto menor, melhor)
 inertia = kmeans.inertia_
 
-# --- PCA apenas para visualização em 2D ---
+# --- PCA para visualização ---
 pca = PCA(n_components=2, random_state=42)
 X_2d = pca.fit_transform(X)
 
-# Variância explicada pelo PCA (útil para relatar quanta info o 2D preserva)
 explained = pca.explained_variance_ratio_
 explained_total = explained.sum()
 
-# Projetar centróides para o espaço 2D do PCA
 centers_2d = pca.transform(kmeans.cluster_centers_)
 
 # --- Gráfico ---
-plt.scatter(X_2d[:, 0], X_2d[:, 1], c=labels, cmap='viridis', s=50)
-plt.scatter(centers_2d[:, 0], centers_2d[:, 1],
-            c='red', marker='*', s=200, label='Centroids (PCA proj.)')
-plt.title('K-Means Clustering (MBA Dataset)')
-plt.xlabel(f'PCA 1 ({explained[0]*100:.1f}% var.)')
-plt.ylabel(f'PCA 2 ({explained[1]*100:.1f}% var.)')
+plt.scatter(
+    X_2d[:, 0], X_2d[:, 1],
+    c=labels, cmap="viridis", s=50
+)
+plt.scatter(
+    centers_2d[:, 0], centers_2d[:, 1],
+    c="red", marker="*", s=200, label="Centroids (PCA proj.)"
+)
+
+plt.title("K-Means Clustering (MBA Dataset)")
+plt.xlabel(f"PCA 1 ({explained[0]*100:.1f}% var.)")
+plt.ylabel(f"PCA 2 ({explained[1]*100:.1f}% var.)")
 plt.legend()
+plt.tight_layout()
 
-# --- Impressões das métricas ---
-print(f"Silhouette Score: {sil_score:.4f}")
-print(f"Inertia (WCSS): {inertia:.2f}")
-print(f"Variância explicada PCA por componente: {explained}")
-print(f"Variância explicada acumulada (PCA 2D): {explained_total:.4f}")
+# --- SALVA COMO PNG ---
+os.makedirs("./docs/k-means/img", exist_ok=True)
+plt.savefig(
+    "./docs/k-means/img/kmeans_pca_clusters.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+plt.close()
 
-# Exportar o SVG do gráfico (para embutir em página)
-buffer = StringIO()
-plt.savefig(buffer, format="svg", transparent=True)
-print(buffer.getvalue())
-# --- Fim do código ---
-
-labels = kmeans.fit_predict(X)
-# (se usar treino/teste, troque X por X_train / y por y_train)
-
-# --- salvar artefatos do K-Means ---
-import os, joblib
-
-ART = "docs/k-means/artifacts"
+# --- Artefatos ---
+ART = "./docs/k-means/artifacts"
 os.makedirs(ART, exist_ok=True)
 
 joblib.dump(
     {
         "kmeans": kmeans,
         "X": X,
-        "y": y,                     # rótulo "admission" codificado (0/1/2)
+        "y": y,
         "labels": labels,
         "silhouette": sil_score,
         "inertia": inertia,
@@ -102,4 +102,5 @@ joblib.dump(
     f"{ART}/kmeans_artifacts.pkl"
 )
 
-print(f"[SALVO] Artefatos K-Means em {ART}/kmeans_artifacts.pkl")
+print(f"[OK] PNG salvo em ./docs/k-means/img/kmeans_pca_clusters.png")
+print(f"[OK] Artefatos salvos em {ART}/kmeans_artifacts.pkl")
