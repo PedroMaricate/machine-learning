@@ -7,7 +7,7 @@ A [base](https://www.kaggle.com/datasets/taweilo/mba-admission-dataset) utilizad
 === "gender"
     A variável gênero apresenta uma diferença significativa na quantidade de aplicações. Observa-se uma predominância de candidatos do sexo masculino em comparação às candidatas do sexo feminino, o que indica uma distribuição desigual nesse aspecto. Essa discrepância pode refletir tendências do mercado de MBA ou características específicas da base gerada. Além disso, é um fator importante a ser considerado no modelo, já que possíveis vieses de gênero podem influenciar tanto a análise quanto as previsões de admissão.
 
-    ![Frequência de gênero por aplicações](docs/arvore-decisao/img/frequencia_genero_aplicacoes.png)
+    ![Frequência de gênero por aplicações](./arvore-decisao/img/frequencia_genero_aplicacoes.png)
 
 === "international"
     A variável alunos internacionais mostra que a maior parte das aplicações é de candidatos domésticos (não internacionais), enquanto os estudantes internacionais representam uma parcela menor do total. Essa diferença pode indicar que os programas de MBA ainda têm maior procura local, embora o número de aplicações internacionais seja relevante para demonstrar a diversidade e a atratividade global da instituição. Essa característica pode influenciar o modelo de predição, visto que fatores como origem do aluno podem estar relacionados às taxas de aceitação.
