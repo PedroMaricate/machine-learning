@@ -6,12 +6,9 @@ except:
     matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
-
-
-import matplotlib.pyplot as plt
 import pandas as pd
-from io import StringIO
 
+# Carrega os dados
 df = pd.read_csv("./src/MBA.csv")
 
 genders = (
@@ -23,6 +20,7 @@ genders = (
 
 counts = genders.value_counts()
 
+# Criação do gráfico
 fig, ax = plt.subplots(figsize=(10, 6))
 ax.bar(counts.index, counts.values)
 
@@ -33,6 +31,11 @@ ax.set_ylabel("Número de aplicações")
 plt.xticks(rotation=45, ha="right")
 plt.tight_layout()
 
-buffer = StringIO()
-plt.savefig(buffer, format="svg", transparent=True)
-print(buffer.getvalue())
+# SALVA COMO IMAGEM (PNG)
+plt.savefig(
+    "./docs/assets/img/frequencia_genero_aplicacoes.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
+plt.close()

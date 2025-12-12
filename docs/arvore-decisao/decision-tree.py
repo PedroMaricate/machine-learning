@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from io import StringIO
@@ -8,7 +7,6 @@ from sklearn import tree
 from sklearn.metrics import accuracy_score
 
 def preprocess(df):
-    
     # Fill missing values
     df["admission"] = df["admission"].fillna("Deny") 
     df['race'] = df['race'].fillna('Unknown')
@@ -37,7 +35,7 @@ x = df.drop(columns=['admission'])
 y = df['admission']
 
 # Dividir os dados em conjuntos de treinamento e teste
-x_train, x_test, y_train, y_test = train_test_split(x, y,test_size=0.2,random_state=42)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
 # Criar e treinar o modelo de árvore de decisão
 classifier = tree.DecisionTreeClassifier()
@@ -46,24 +44,16 @@ classifier.fit(x_train, y_train)
 # Avaliar o modelo
 accuracy = classifier.score(x_test, y_test)
 print(f"Accuracy: {accuracy:.2f}")
-tree.plot_tree(classifier)
 
-feature_importance = pd.DataFrame({
-    'Feature': classifier.feature_names_in_,
-    'Importância': classifier.feature_importances_
-})
-print("<br>Importância das Features:")
-print(feature_importance.sort_values(by='Importância', ascending=False).to_html())
-
+# Plotando a árvore de decisão
 plt.figure(figsize=(20, 10))
 tree.plot_tree(classifier, max_depth=5, fontsize=10)
 
+# Salvar a árvore como uma imagem PNG na pasta assets/img
+plt.savefig(
+    "./docs/assets/img/decision_tree.png",
+    dpi=300,
+    bbox_inches="tight"
+)
 
-# Para imprimir na página HTML
-buffer = StringIO()
-plt.savefig(buffer, format="svg")
-print(buffer.getvalue())
-
-
-
-
+plt.close()  # Fechar o gráfico após salvar

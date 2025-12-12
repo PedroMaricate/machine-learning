@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-from io import StringIO
 
+# Leitura dos dados
 df = pd.read_csv("./src/MBA.csv")
 
 majors = (
@@ -13,17 +13,26 @@ majors = (
 
 counts = majors.value_counts()
 
+# Criação do gráfico
 fig, ax = plt.subplots(figsize=(10, 6))
-ax.bar(counts.index, counts.values, color="skyblue", edgecolor="black")
+ax.bar(
+    counts.index,
+    counts.values,
+    edgecolor="black"
+)
 
 ax.set_title("Frequência de majors por aplicações")
 ax.set_xlabel("Área de formação")
 ax.set_ylabel("Número de aplicações")
 
 plt.xticks(rotation=45, ha="right")
-
 plt.tight_layout()
 
-buffer = StringIO()
-plt.savefig(buffer, format="svg", transparent=True)
-print(buffer.getvalue())
+# SALVA COMO IMAGEM (PNG)
+plt.savefig(
+    "./docs/assets/img/frequencia_majors.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
+plt.close()
