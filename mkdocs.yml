@@ -2,7 +2,7 @@ site_name: Machine Learning
 site_author: Pedro Maricate
 site_url: https://pedromaricate.github.io/machine-learning
 repo_url: https://github.com/PedroMaricate/machine-learning
-repo_name: github/documentation.template
+repo_name: PedroMaricate/machine-learning
 
 theme:
   name: material
@@ -110,7 +110,7 @@ plugins:
       enable_creation_date: true
   - git-authors
   - git-committers:
-      repository: pedromaricate/pedromaricate.github.com
+      repository: PedroMaricate/machine-learning
       branch: main
   - search
   - badges
